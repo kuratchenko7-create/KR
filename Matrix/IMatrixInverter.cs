@@ -1,6 +1,6 @@
 namespace Matrix;
 
-public interface MatrixInverter
+public interface IMatrixInverter
 {
     Matrix Invert(Matrix matrix);
 }

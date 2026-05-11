@@ -1,6 +1,6 @@
 namespace Matrix;
 
-public class GaussInverter : MatrixInverter
+public class GaussInverter : IMatrixInverter
 {
     public Matrix Invert(Matrix matrix)
     {

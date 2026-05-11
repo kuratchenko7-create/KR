@@ -1,6 +1,6 @@
 namespace Matrix;
 
-public class BlockInverter : MatrixInverter
+public class BlockInverter : IMatrixInverter
 {
     private readonly GaussInverter gaussInverter = new();
 

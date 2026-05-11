@@ -15,7 +15,7 @@ public class Program
         app.Run(mainWindow);
     }
 
-    public (Matrix inverse, TimeSpan elapsed) InvertMatrix(Matrix matrix, MatrixInverter inverter)
+    public (Matrix inverse, TimeSpan elapsed) InvertMatrix(Matrix matrix, IMatrixInverter inverter)
     {
         PerformanceTracker tracker = new PerformanceTracker(inverter);
         Matrix inverse = tracker.Invert(matrix);

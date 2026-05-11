@@ -2,13 +2,13 @@ using System.Diagnostics;
 
 namespace Matrix;
 
-public class PerformanceTracker : MatrixInverter
+public class PerformanceTracker : IMatrixInverter
 {
-    private readonly MatrixInverter target;
+    private readonly IMatrixInverter target;
 
     public TimeSpan LastExecutionTime { get; private set; }
 
-    public PerformanceTracker(MatrixInverter target)
+    public PerformanceTracker(IMatrixInverter target)
     {
         this.target = target ?? throw new ArgumentNullException(nameof(target));
     }

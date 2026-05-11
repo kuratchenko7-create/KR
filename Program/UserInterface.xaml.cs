@@ -5,7 +5,8 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 
-namespace Matrix;
+namespace Matrix
+{
 
 public partial class UserInterface : Window
 {
@@ -299,4 +300,5 @@ public partial class UserInterface : Window
         MessageBox.Show(message, "Помилка", MessageBoxButton.OK, MessageBoxImage.Warning);
         SetStatus($"Помилка: {message}");
     }
+}
 }
