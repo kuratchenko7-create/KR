@@ -198,7 +198,7 @@ public partial class UserInterface : Window
 
         for (int j = 0; j < matrix.Cols; j++)
         {
-            table.Columns.Add($"C{j}", typeof(double));
+            table.Columns.Add($"C{j}", typeof(string));
         }
 
         for (int i = 0; i < matrix.Rows; i++)
@@ -206,7 +206,9 @@ public partial class UserInterface : Window
             DataRow row = table.NewRow();
             for (int j = 0; j < matrix.Cols; j++)
             {
-                row[j] = Math.Round(matrix[i, j], 6);
+                double val = Math.Round(matrix[i, j], 6);
+                if (val == 0) val = 0;
+                row[j] = val.ToString(CultureInfo.InvariantCulture);
             }
             table.Rows.Add(row);
         }
@@ -229,11 +231,16 @@ public partial class UserInterface : Window
             for (int j = 0; j < n; j++)
             {
                 object? val = table.Rows[i][j];
-                if (val == DBNull.Value)
+                if (val == null || val == DBNull.Value || string.IsNullOrWhiteSpace(val.ToString()))
                 {
                     throw new MatrixException($"Комірка [{i + 1}, {j + 1}] не заповнена.");
                 }
-                currentMatrix[i, j] = Convert.ToDouble(val);
+                string text = val.ToString()!.Trim().Replace(',', '.');
+                if (!double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out double parsed))
+                {
+                    throw new MatrixException($"Комірка [{i + 1}, {j + 1}] містить некоректне значення.");
+                }
+                currentMatrix[i, j] = parsed;
             }
         }
     }
@@ -253,18 +260,17 @@ public partial class UserInterface : Window
             TextBox? textBox = e.EditingElement as TextBox;
             if (textBox != null)
             {
-                string text = textBox.Text.Trim();
-                string normalized = text.Replace('.', ',');
-                textBox.Text = normalized;
+                string text = textBox.Text.Trim().Replace(',', '.');
+                textBox.Text = text;
 
-                if (!string.IsNullOrEmpty(normalized) && !double.TryParse(normalized, out double val))
+                if (!string.IsNullOrEmpty(text) && !double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out double val))
                 {
                     ShowError("Некоректне значення. Введіть числове значення.");
                     e.Cancel = true;
                     return;
                 }
 
-                if (!string.IsNullOrEmpty(normalized) && double.TryParse(normalized, out val) && val != 0
+                if (!string.IsNullOrEmpty(text) && double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out val) && val != 0
                     && (Math.Abs(val) > 1000000 || Math.Abs(val) < 1e-5))
                 {
                     ShowError("Значення повинно бути 0 або в діапазоні [1e-5, 1000000] за модулем.");
