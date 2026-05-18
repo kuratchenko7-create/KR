@@ -73,6 +73,8 @@ public partial class UserInterface : Window
         {
             if (!gridInput.IsReadOnly)
             {
+                gridInput.CommitEdit(DataGridEditingUnit.Cell, true);
+                gridInput.CommitEdit(DataGridEditingUnit.Row, true);
                 ReadMatrixFromGrid();
             }
 
@@ -206,9 +208,9 @@ public partial class UserInterface : Window
             DataRow row = table.NewRow();
             for (int j = 0; j < matrix.Cols; j++)
             {
-                double val = Math.Round(matrix[i, j], 6);
-                if (val == 0) val = 0;
-                row[j] = val.ToString(CultureInfo.InvariantCulture);
+                double val = matrix[i, j];
+                if (Math.Abs(val) < 1e-9) val = 0;
+                row[j] = val.ToString("G8", CultureInfo.InvariantCulture);
             }
             table.Rows.Add(row);
         }

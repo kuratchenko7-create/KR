@@ -15,10 +15,8 @@ public class FileService
         Matrix? verification)
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("═══════════════════════════════════════════");
         sb.AppendLine("  ЗВІТ: Обернення матриці");
         sb.AppendLine($"  Дата: {DateTime.Now:dd.MM.yyyy HH:mm:ss}");
-        sb.AppendLine("═══════════════════════════════════════════");
 
         sb.AppendLine();
         sb.AppendLine($"Розмірність: {original.Rows}x{original.Cols}");
@@ -61,8 +59,8 @@ public class FileService
             for (int j = 0; j < matrix.Cols; j++)
             {
                 double val = matrix[i, j];
-                if (Math.Abs(val) < 1e-10) val = 0.0;
-                sb.Append($"{val,14:G6} ");
+                if (Math.Abs(val) < 1e-9) val = 0.0;
+                sb.AppendFormat(CultureInfo.InvariantCulture, "{0,16:G8} ", val);
             }
             sb.AppendLine();
         }

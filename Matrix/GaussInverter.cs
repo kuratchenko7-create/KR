@@ -30,19 +30,44 @@ public class GaussInverter : IMatrixInverter
 
     private void ForwardPart(double[,] augmented, int n)
     {
-        for (int k = 0; k < n - 1; k++)
+        for (int k = 0; k < n; k++)
         {
-            if (Math.Abs(augmented[k, k]) < 1e-10)
+            int maxRow = k;
+            double maxVal = Math.Abs(augmented[k, k]);
+            
+            for (int i = k + 1; i < n; i++)
+            {
+                if (Math.Abs(augmented[i, k]) > maxVal)
+                {
+                    maxVal = Math.Abs(augmented[i, k]);
+                    maxRow = i;
+                }
+            }
+
+            if (maxVal < 1e-10)
             {
                 throw new DegenerateMatrixException();
             }
 
-            for (int i = k + 1; i < n; i++)
+            if (maxRow != k)
             {
-                double factor = augmented[i, k] / augmented[k, k];
                 for (int j = k; j < 2 * n; j++)
                 {
-                    augmented[i, j] -= factor * augmented[k, j];
+                    double temp = augmented[k, j];
+                    augmented[k, j] = augmented[maxRow, j];
+                    augmented[maxRow, j] = temp;
+                }
+            }
+
+            if (k < n - 1)
+            {
+                for (int i = k + 1; i < n; i++)
+                {
+                    double factor = augmented[i, k] / augmented[k, k];
+                    for (int j = k; j < 2 * n; j++)
+                    {
+                        augmented[i, j] -= factor * augmented[k, j];
+                    }
                 }
             }
         }
